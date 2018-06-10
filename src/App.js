@@ -1,12 +1,12 @@
 import React, { Component } from "react";
-import { Icon, Sortable, Layout, Popover, Menu, Portal, Select } from "zent";
+import { Icon, Sortable, Layout, Portal, Select } from "zent";
+import { Sparklines, SparklinesLine, SparklinesSpots } from "react-sparklines";
 
 import "zent/css/index.css";
 import "./App.css";
 import Navbar from "./component/navbar";
 
 const { Row, Col } = Layout;
-const { MenuItem } = Menu;
 const WrappedPortal = Portal.withNonScrollable(Portal.withESCToClose(Portal));
 const Option = Select.Option;
 
@@ -52,24 +52,6 @@ class App extends Component {
 					name: "BOXL",
 					source: "THE TRADE DESK INC",
 					size: "lg",
-					value: 3.35
-				},
-				{
-					name: "WOW",
-					source: "THE TRADE DESK INC",
-					size: "md",
-					value: 3.35
-				},
-				{
-					name: "ARCB",
-					source: "THE TRADE DESK INC",
-					size: "lg",
-					value: 3.35
-				},
-				{
-					name: "OMER",
-					source: "THE TRADE DESK INC",
-					size: "sm",
 					value: 3.35
 				}
 			]
@@ -141,6 +123,29 @@ class App extends Component {
 										<span className="sortable-column-title">{item.name}</span>
 										<Icon type="settings-o" className="sortable-column-icon" />
 										<span className="sortable-column-value">{item.value}</span>
+										<Sparklines
+											data={[63, 46, 73, 70, 3, 79, 84, 59, 7]}
+											margin={20}
+										>
+											<SparklinesLine
+												style={{
+													strokeWidth: 2,
+													stroke: "rgba(242, 243, 248, 0.45)",
+													fill: "none"
+												}}
+												onMouseMove={(e, data, p) =>
+													console.log("move", e, data, p)
+												}
+											/>
+											<SparklinesSpots
+												size={1}
+												style={{
+													stroke: "#fff",
+													strokeWidth: 2,
+													fill: "#fff"
+												}}
+											/>
+										</Sparklines>
 									</Col>
 								);
 							})}
@@ -157,7 +162,7 @@ class App extends Component {
 							onClickAway={this.hideBodyPortal}
 							onClose={this.hideBodyPortal}
 							className="layer"
-							style={{ background: "rgba(0, 0, 0, 0.2)", zIndex: 25 }}
+							style={{ background: "rgba(0, 0, 0, 0.5)", zIndex: 25 }}
 							useLayerForClickAway
 						>
 							<div className="zent-doc-portal-content modal">
