@@ -1,58 +1,73 @@
 import React, { Component } from "react";
-import { Icon, Sortable, Layout, Portal, Select } from "zent";
-import { Sparklines, SparklinesLine, SparklinesSpots } from "react-sparklines";
 
-import "zent/css/index.css";
 import "./App.css";
 import Navbar from "./component/navbar";
-
-const { Row, Col } = Layout;
-const WrappedPortal = Portal.withNonScrollable(Portal.withESCToClose(Portal));
-const Option = Select.Option;
+import AddFrom from "./component/add";
+import NewButton from "./component/newButton";
+import Column from "./component/column";
 
 class App extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			visible: false,
-			bodyPortalVisible: false,
-			purePortalVisible: false,
-			list: [
+			modalStatus: false,
+			items: [
 				{
 					name: "EVSTC",
 					source: "THE TRADE DESK INC",
-					size: "lg",
-					value: 3.35
-				},
-				{
-					name: "ANFI",
-					source: "THE TRADE DESK INC",
-					size: "md",
-					value: 3.35
-				},
-				{
-					name: "TEST",
-					source: "THE TRADE DESK INC",
-					size: "sm",
-					value: 3.35
-				},
-				{
-					name: "TTD",
-					source: "THE TRADE DESK INC",
-					size: "md",
-					value: 3.35
-				},
-				{
-					name: "HEAR",
-					source: "THE TRADE DESK INC",
-					size: "sm",
+					size: "large",
+					grow: true,
 					value: 3.35
 				},
 				{
 					name: "BOXL",
 					source: "THE TRADE DESK INC",
-					size: "lg",
-					value: 3.35
+					size: "large",
+					value: 3.35,
+					grow: false
+				},
+				{
+					name: "TTD",
+					source: "THE TRADE DESK INC",
+					size: "large",
+					value: 3.35,
+					grow: true
+				},
+				{
+					name: "HEAR",
+					source: "THE TRADE DESK INC",
+					size: "large",
+					value: 3.35,
+					grow: false
+				},
+				{
+					name: "TTD",
+					source: "THE TRADE DESK INC",
+					size: "medium",
+					value: 3.35,
+					grow: false
+				},
+				{
+					name: "ANFI",
+					source: "THE TRADE DESK INC",
+					size: "medium",
+					value: 3.35,
+					grow: true
+				},
+				{
+					name: "TEST",
+					source: "THE TRADE DESK INC",
+					size: "small",
+					value: 3.35,
+					grow: false
+				},
+				,
+				{
+					name: "HEAR",
+					source: "THE TRADE DESK INC",
+					size: "small",
+					value: 3.35,
+					grow: true
 				}
 			]
 		};
@@ -84,134 +99,49 @@ class App extends Component {
 		});
 	};
 
-	showBodyPortal = () => this.setState({ bodyPortalVisible: true });
+	showModal = () => this.setState({ modalStatus: true });
 
-	hideBodyPortal = () => this.setState({ bodyPortalVisible: false });
+	hideModal = () => this.setState({ modalStatus: false });
 
 	addNewItem = () => {
 		this.state.list.push({
 			name: "Shayan",
 			source: "THE TRADE DESK INC",
-			size: "md",
+			size: "medium",
 			value: 3.35
 		});
-		this.setState({ list: this.state.list });
-		this.hideBodyPortal();
+		this.setState({ list: this.state.list, modalStatus: false });
 	};
 
 	render() {
-		const { list } = this.state;
+		const { items, modalStatus } = this.state;
+		const largeItems = items.filter(item => item.size === "large");
+		const mediumItems = items.filter(item => item.size === "medium");
+		const smallItems = items.filter(item => item.size === "small");
 		return (
 			<main>
 				<Navbar />
 				<div className="container">
-					<Row>
-						<Sortable
-							className="sortable-column"
-							items={list}
-							animation={300}
-							filterClass="sortable-column-add"
-							dragClass="sortable-column-drag"
-							onChange={this.handleChange}
-						>
-							{list.map((item, index) => {
-								return (
-									<Col
-										className={`sortable-column-item ${item.size}-size`}
-										key={item.name}
-									>
-										<span className="sortable-column-title">{item.name}</span>
-										<Icon type="settings-o" className="sortable-column-icon" />
-										<span className="sortable-column-value">{item.value}</span>
-										<Sparklines
-											data={[63, 46, 73, 70, 3, 79, 84, 59, 7]}
-											margin={20}
-										>
-											<SparklinesLine
-												style={{
-													strokeWidth: 2,
-													stroke: "rgba(242, 243, 248, 0.45)",
-													fill: "none"
-												}}
-												onMouseMove={(e, data, p) =>
-													console.log("move", e, data, p)
-												}
-											/>
-											<SparklinesSpots
-												size={1}
-												style={{
-													stroke: "#fff",
-													strokeWidth: 2,
-													fill: "#fff"
-												}}
-											/>
-										</Sparklines>
-									</Col>
-								);
-							})}
-							<Col
-								span={4}
-								className="sortable-column-add"
-								onClick={this.showBodyPortal}
-							>
-								<Icon type="plus" />
-							</Col>
-						</Sortable>
-						<WrappedPortal
-							visible={this.state.bodyPortalVisible}
-							onClickAway={this.hideBodyPortal}
-							onClose={this.hideBodyPortal}
-							className="layer"
-							style={{ background: "rgba(0, 0, 0, 0.5)", zIndex: 25 }}
-							useLayerForClickAway
-						>
-							<div className="zent-doc-portal-content modal">
-								<div className="modal-header">
-									<h2>درج آیتم جدید</h2>
-									<Icon
-										type="close"
-										className="close-modal"
-										onClick={this.hideBodyPortal}
-									/>
-								</div>
-								<div className="modal-body">
-									<div className="zent-form__control-group ">
-										<label className="zent-form__control-label">عنوان</label>
-									</div>
-									<Select className="month" placeholder="عنوان" value="">
-										{list.map(item => (
-											<Option key={item.name} value={item.name}>
-												{item.name}
-											</Option>
-										))}
-									</Select>
-									<div className="zent-form__control-group ">
-										<label className="zent-form__control-label">سایز</label>
-									</div>
-									<Select className="month" placeholder="سایز" value="0">
-										<Option value="0">کوچک</Option>
-										<Option value="1">متوسط</Option>
-										<Option value="2">بزرگ</Option>
-									</Select>
-									<div className="zent-form__control-group ">
-										<label className="zent-form__control-label">
-											بازه زمانی
-										</label>
-									</div>
-									<Select className="month" placeholder="بازه زمانی" value="0">
-										<Option value="0">همزمان</Option>
-										<Option value="1">ساعتی</Option>
-										<Option value="2">روزانه</Option>
-									</Select>
-								</div>
-								<div className="modal-footer">
-									<button onClick={this.addNewItem}>ذخیره</button>
-									<button>حذف</button>
-								</div>
-							</div>
-						</WrappedPortal>
-					</Row>
+					<div className="column-divider large-size">
+						{largeItems.map((item, index) => {
+							return <Column item={item} key={index} />;
+						})}
+						<NewButton onUpdate={this.showModal} />
+					</div>
+					<div className="column-divider medium-size">
+						{mediumItems.map((item, index) => {
+							return <Column item={item} key={index} />;
+						})}
+						<NewButton onUpdate={this.showModal} />
+					</div>
+					<div className="column-divider small-size">
+						{smallItems.map((item, index) => {
+							return <Column item={item} key={index} />;
+						})}
+						<NewButton onUpdate={this.showModal} />
+					</div>
 				</div>
+				<AddFrom hide={this.hideModal} status={modalStatus} list={items} />
 			</main>
 		);
 	}
